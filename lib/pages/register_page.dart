@@ -21,6 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _confirmpaswordController = TextEditingController();
   final _usernameController = TextEditingController();
   int _rekeningController = 31200;
+  int _balanceController = 0;
 
   @override
   void dispose() {
@@ -29,6 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _confirmpaswordController.dispose();
     _usernameController.dispose();
     _rekeningController;
+    _balanceController;
     super.dispose();
   }
 
@@ -55,19 +57,22 @@ class _RegisterPageState extends State<RegisterPage> {
         _passwordController.text.trim(),
         _usernameController.text.trim(),
         _rekeningController++,
+        _balanceController,
       );
     }
+
     // FirebaseAuth.instance.signOut();
     Navigator.pop(context);
   }
 
   Future addUsersDetails(String id, String email, String password,
-      String username, int rekening) async {
+      String username, int rekening, int balance) async {
     await FirebaseFirestore.instance.collection('user').doc(id).set({
       'email': email,
       'password': password,
       'username': username,
       'rekening': rekening++,
+      'balance': balance,
     });
   }
 

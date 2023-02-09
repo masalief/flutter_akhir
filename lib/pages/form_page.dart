@@ -18,7 +18,7 @@ class _FormPageState extends State<FormPage> {
   @override
   Widget build(BuildContext context) {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference users = firestore.collection('users');
+    CollectionReference users = firestore.collection('user');
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
@@ -76,16 +76,16 @@ class _FormPageState extends State<FormPage> {
                   color: Color.fromARGB(255, 0, 74, 52),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(
-                      10,
+                      5,
                     ),
                     topRight: Radius.circular(
-                      10,
+                      5,
                     ),
                     bottomLeft: Radius.circular(
-                      10,
+                      5,
                     ),
                     bottomRight: Radius.circular(
-                      10,
+                      5,
                     ),
                   ),
                   boxShadow: [
@@ -110,21 +110,23 @@ class _FormPageState extends State<FormPage> {
                             return null;
                           }),
                           decoration: InputDecoration(
-                              hintText: "Masukan Email Anda",
-                              hintStyle:
-                                  TextStyle(color: Colors.grey, fontSize: 16),
-                              labelText: 'Email Anda',
-                              labelStyle: TextStyle(
-                                color: Colors.blueGrey,
+                            hintText: "Masukan Email Anda",
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 15),
+                            labelText: 'Email Anda',
+                            labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 163, 171, 130),
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 163, 171, 130),
+                                width: 1.0,
                               ),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 163, 171, 130),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10))),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           onChanged: (value) {},
                         ),
                       ),
@@ -140,21 +142,23 @@ class _FormPageState extends State<FormPage> {
                           }),
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                              hintText: "Input No Rekening",
-                              hintStyle:
-                                  TextStyle(color: Colors.grey, fontSize: 16),
-                              labelText: 'No Rekening',
-                              labelStyle: TextStyle(
-                                color: Colors.blueGrey,
+                            hintText: "Input No Rekening",
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 15),
+                            labelText: 'No Rekening',
+                            labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 163, 171, 130),
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 163, 171, 130),
+                                width: 1.0,
                               ),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 163, 171, 130),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10))),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           onChanged: (value) {},
                         ),
                       ),
@@ -170,21 +174,23 @@ class _FormPageState extends State<FormPage> {
                           }),
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                              hintText: "Username Pengguna",
-                              hintStyle:
-                                  TextStyle(color: Colors.grey, fontSize: 16),
-                              labelText: 'Username Anda',
-                              labelStyle: TextStyle(
-                                color: Colors.blueGrey,
+                            hintText: "Username Pengguna",
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 15),
+                            labelText: 'Username Anda',
+                            labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 163, 171, 130),
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 163, 171, 130),
+                                width: 1.0,
                               ),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    color: Color.fromARGB(255, 163, 171, 130),
-                                    width: 1.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10))),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           onChanged: (value) {},
                         ),
                       ),
@@ -194,30 +200,52 @@ class _FormPageState extends State<FormPage> {
                         // width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 15, 225, 120),
+                            backgroundColor: Color.fromARGB(255, 11, 106, 58),
                           ),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               users.add({
-                                "emailController": _emailController.text,
-                                "rekeningController":
+                                "email": _emailController.text,
+                                "rekening":
                                     int.tryParse(_rekeningController.text) ?? 0,
-                                "usernameController": _usernameController.text,
+                                "username": _usernameController.text,
+                                "balance": 0,
                               });
                               _emailController.text = "";
                               _rekeningController.text = "";
                               _usernameController.text = "";
                               Navigator.of(context).pop();
                             }
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const AlertDialog(
+                                    icon: Icon(
+                                      Icons.check_circle_outline,
+                                      size: 50,
+                                      color: Colors.white,
+                                    ),
+                                    backgroundColor:
+                                        Color.fromARGB(255, 15, 225, 120),
+                                    title: Center(
+                                      child: Text(
+                                        "Berhasil Tambah Rekening Baru, Silahkan Transfer",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  );
+                                });
                           },
                           child: const Text(
                             "Tambah",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Color.fromARGB(255, 163, 171, 130),
                             ),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

@@ -1,12 +1,24 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class TopupPage extends StatelessWidget {
+class TopupPage extends StatefulWidget {
   const TopupPage({super.key});
 
   @override
+  State<TopupPage> createState() => _TopupPageState();
+}
+
+final balance = TextEditingController();
+
+class _TopupPageState extends State<TopupPage> {
+  @override
   Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference users = firestore.collection('user');
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 3, 12, 11),
       body: SafeArea(
@@ -82,11 +94,89 @@ class TopupPage extends StatelessWidget {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TopupPage(),
-                              ),
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: TextField(
+                                    keyboardType: TextInputType.number,
+                                    controller: balance,
+                                    decoration: InputDecoration(
+                                      labelText: "Anda Menggunakan Shopee",
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          5,
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: Colors.deepOrange,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        balance.clear();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Batal',
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.redAccent,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          users.doc(user!.uid).update({
+                                            "balance": FieldValue.increment(
+                                                int.parse(balance.text))
+                                          });
+                                          users
+                                              .doc(user!.uid)
+                                              .collection('history_topup')
+                                              .add({
+                                            "keterangan": 'topup',
+                                            "nominal": int.parse(balance.text),
+                                            // "on_user":'topup',
+                                          });
+                                        });
+                                        balance.clear();
+                                        Navigator.pop(context);
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return const AlertDialog(
+                                                icon: Icon(
+                                                  Icons.check_circle_outline,
+                                                  size: 50,
+                                                  color: Color.fromARGB(
+                                                      255, 163, 171, 130),
+                                                ),
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 0, 74, 52),
+                                                title: Center(
+                                                  child: Text(
+                                                    "Yeay Kamu Berhasil Isi Saldo !",
+                                                    style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 163, 171, 130),
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              );
+                                            });
+                                      },
+                                      child: Text('Topup'),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.green,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
                           // ignore: prefer_const_constructors
@@ -134,8 +224,9 @@ class TopupPage extends StatelessWidget {
                           ),
                           Image.asset(
                             "images/indomaret.png",
-                            height: 300,
-                            width: 250,
+                            height: 120,
+                            width: 120,
+                            fit: BoxFit.contain,
                           ),
                         ],
                       ),
@@ -157,13 +248,92 @@ class TopupPage extends StatelessWidget {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TopupPage(),
-                              ),
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: TextField(
+                                    keyboardType: TextInputType.number,
+                                    controller: balance,
+                                    decoration: InputDecoration(
+                                      labelText: "Anda Menggunakan Indomaret",
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          5,
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: Colors.amber,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        balance.clear();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Batal',
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.redAccent,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          users.doc(user!.uid).update({
+                                            "balance": FieldValue.increment(
+                                                int.parse(balance.text))
+                                          });
+                                          users
+                                              .doc(user!.uid)
+                                              .collection('history_topup')
+                                              .add({
+                                            "keterangan": 'topup',
+                                            "nominal": int.parse(balance.text),
+                                            // "on_user":'topup',
+                                          });
+                                        });
+                                        balance.clear();
+                                        Navigator.pop(context);
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return const AlertDialog(
+                                                icon: Icon(
+                                                  Icons.check_circle_outline,
+                                                  size: 50,
+                                                  color: Color.fromARGB(
+                                                      255, 163, 171, 130),
+                                                ),
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 0, 74, 52),
+                                                title: Center(
+                                                  child: Text(
+                                                    "Kamu Berhasil Isi Saldo !",
+                                                    style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 163, 171, 130),
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              );
+                                            });
+                                      },
+                                      child: Text('Topup'),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.green,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
+                          // ignore: prefer_const_constructors
                           icon: Icon(
                             Icons.add,
                             color: Colors.white54,
@@ -232,13 +402,93 @@ class TopupPage extends StatelessWidget {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TopupPage(),
-                              ),
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: TextField(
+                                    keyboardType: TextInputType.number,
+                                    controller: balance,
+                                    decoration: InputDecoration(
+                                      labelText: "Anda Menggunakan Debit",
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(
+                                          5,
+                                        ),
+                                        borderSide: BorderSide(
+                                          color:
+                                              Color.fromARGB(255, 67, 46, 151),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        balance.clear();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        'Batal',
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.redAccent,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          users.doc(user!.uid).update({
+                                            "balance": FieldValue.increment(
+                                                int.parse(balance.text))
+                                          });
+                                          users
+                                              .doc(user!.uid)
+                                              .collection('history_topup')
+                                              .add({
+                                            "keterangan": 'topup',
+                                            "nominal": int.parse(balance.text),
+                                            // "on_user":'topup',
+                                          });
+                                        });
+                                        balance.clear();
+                                        Navigator.pop(context);
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return const AlertDialog(
+                                                icon: Icon(
+                                                  Icons.check_circle_outline,
+                                                  size: 50,
+                                                  color: Color.fromARGB(
+                                                      255, 163, 171, 130),
+                                                ),
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 0, 74, 52),
+                                                title: Center(
+                                                  child: Text(
+                                                    "Kamu Berhasil Isi Saldo !",
+                                                    style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 163, 171, 130),
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              );
+                                            });
+                                      },
+                                      child: Text('Topup'),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.green,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
+                          // ignore: prefer_const_constructors
                           icon: Icon(
                             Icons.add,
                             color: Colors.white54,
