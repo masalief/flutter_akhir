@@ -40,7 +40,7 @@ class _RegisterPageState extends State<RegisterPage> {
       builder: (context) {
         return Center(
           child: CircularProgressIndicator(
-            color: Color.fromARGB(255, 3, 12, 11),
+            color: Color.fromARGB(255, 163, 171, 130),
           ),
         );
       },
